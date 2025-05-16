@@ -1,0 +1,85 @@
+/*Hacer un programa que reemplace de un arreglo A todas las
+ocurrencias de una secuencia patrón dada en un arreglo P, por la
+secuencia contenida en el arreglo R de igual tamaño. */
+public class ejercicio30copia {
+        public static final int MAX = 13, MAXP = 3;
+        public static final char SEPARADOR = ' ';
+    
+        public static void main(String[] args) {
+            char[] A = {' ', 'a', 'b', 'c', ' ', 'd', 'e', 'f', ' ', 'a', 'b', 'c', ' '};
+            char[] P = {'a', 'b', 'c'};
+            char[] R = {'x', 'y', 'z'}; 
+            ImprimirArreglo(A);
+            ProcesarSecuencias(A, P, R);
+            ImprimirArreglo(A);
+        }
+    
+        public static void ProcesarSecuencias(char[] A, char[] P, char[] R) {
+            int inicio = 0, fin = -1;
+            while (inicio < MAX) {
+                inicio = BuscarInicio(A, fin + 1);
+                if (inicio < MAX) {
+                    fin = BuscarFin(A, inicio);
+                    if (Esigual(A, P, inicio, fin)) {
+                        // Eliminar la secuencia actual
+                        for (int i = 0; i < MAXP; i++) {
+                            CorrimientoIzquierda(A, inicio);
+                        }
+                        // Hacer espacio y escribir R en esa posición
+                        for (int i = 0; i < MAXP; i++) {
+                            CorrimientoDerecha(A, inicio);
+                            A[inicio + i] = R[i]; // Insertar caracter de R
+                        }
+                        fin = inicio + MAXP - 1; // Mover fin para continuar bien
+                    }
+                }
+            }
+        }
+    
+        public static void CorrimientoDerecha(char[] A, int inicio) {
+            for (int i = MAX - 1; i > inicio; i--) {
+                A[i] = A[i - 1];
+            }
+        }
+    
+        public static void CorrimientoIzquierda(char[] A, int inicio) {
+            while (inicio < MAX - 1) {
+                A[inicio] = A[inicio + 1];
+                inicio++;
+            }
+            A[MAX - 1] = SEPARADOR;
+        }
+    
+        public static boolean Esigual(char[] A, char[] P, int inicio, int fin) {
+            if (fin - inicio + 1 != MAXP) {
+                return false;
+            }
+            for (int i = 0; i < MAXP; i++) {
+                if (A[inicio + i] != P[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    
+        public static int BuscarInicio(char[] A, int pos) {
+            while (pos < MAX && A[pos] == SEPARADOR) {
+                pos++;
+            }
+            return pos;
+        }
+    
+        public static int BuscarFin(char[] A, int pos) {
+            while (pos < MAX && A[pos] != SEPARADOR) {
+                pos++;
+            }
+            return pos - 1;
+        }
+    
+        public static void ImprimirArreglo(char[] A) {
+            for (int i = 0; i < MAX; i++) {
+                System.out.print("|" + A[i] + "|");
+            }
+            System.out.println();
+        }
+    }
